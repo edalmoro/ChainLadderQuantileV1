@@ -179,3 +179,93 @@ test.MackNANissue <- function(){
   checkEquals(summary(MackChainLadder(MackNANTriIssue, est.sigma="Mack"))$Totals[1,1],
               1900)
 }
+
+test.Mack1993 <- function() {
+  ## by Eric Dal Moro
+  ## Check the additional Skewness elements addedto MachChainLadder function on the Mack 1993 triangles
+  ## Results are in the paper by Eric Dal Moro:
+  ## "An approximation of the non-life reserve risk distribution using the Cornish-Fisher expansion"
+  ## available at SSRN: https://ssrn.com/abstract=2965384
+  Test <- MackChainLadder(Mack1993, est.sigma="Mack")
+  q<-quantile(Test,0.65)
+  ## Table 1 in the above paper
+  
+  Skewness <- c(0, 0, -0.029, -0.043, -0.001, 0.180, 0.055, 0.267, 0.286, 0.314)
+  OverSkew <- 0.214
+  
+  ## test output from MackChainLadder
+  checkEquals(q$ByOrigin[,2], Skewness,tol=0.0015, checkNames = FALSE)
+  checkEquals(q$Totals$Totals[2], OverSkew,tol=0.0015, checkNames = FALSE)
+}
+
+test.SCORLiabProp <- function() {
+  ## by Eric Dal Moro
+  ## Check the additional Skewness elements addedto MachChainLadder function on the Mack 1993 triangles
+  ## Results are in the paper by Eric Dal Moro:
+  ## "An approximation of the non-life reserve risk distribution using the Cornish-Fisher expansion"
+  ## available at SSRN: https://ssrn.com/abstract=2965384
+  Test <- MackChainLadder(SCORLiabProp, est.sigma="Mack")
+  q<-quantile(Test,0.65)
+  ## Table 1 in the above paper
+  
+  Skewness <- c(0, 0, -0.032, 0.157, -0.416, 0.542, 0.418, 0.392, 0.203, 0.226, 0.036, 0.048, 0.015, 0.060, 0.925)
+  OverSkew <- 0.534
+  
+  ## test output from MackChainLadder
+  checkEquals(q$ByOrigin[,2], Skewness,tol=0.0015, checkNames = FALSE)
+  checkEquals(q$Totals$Totals[2], OverSkew,tol=0.0015, checkNames = FALSE)
+}
+
+test.SCORMotorNP <- function() {
+  ## by Eric Dal Moro
+  ## Check the additional Skewness elements addedto MachChainLadder function on the Mack 1993 triangles
+  ## Results are in the paper by Eric Dal Moro:
+  ## "An approximation of the non-life reserve risk distribution using the Cornish-Fisher expansion"
+  ## available at SSRN: https://ssrn.com/abstract=2965384
+  Test <- MackChainLadder(SCORMotorNP, est.sigma="Mack")
+  q<-quantile(Test,0.65)
+  ## Table 1 in the above paper
+  
+  Skewness <- c(0, 0, -0.037, -0.138, -0.115, -0.026, 0.059, 0.101, 0.236, 0.185, 0.271, 0.142, 0.174, 0.278, 1.001)
+  OverSkew <- 0.333
+  
+  ## test output from MackChainLadder
+  checkEquals(q$ByOrigin[,2], Skewness,tol=0.0015, checkNames = FALSE)
+  checkEquals(q$Totals$Totals[2], OverSkew,tol=0.0015, checkNames = FALSE)
+}
+
+test.EverestLiabProp <- function() {
+  ## by Eric Dal Moro
+  ## Check the additional Skewness elements addedto MachChainLadder function on the Mack 1993 triangles
+  ## Results are in the paper by Eric Dal Moro:
+  ## "An approximation of the non-life reserve risk distribution using the Cornish-Fisher expansion"
+  ## available at SSRN: https://ssrn.com/abstract=2965384
+  Test <- MackChainLadder(EverestLiabProp, est.sigma="Mack")
+  q<-quantile(Test,0.65)
+  ## Table 1 in the above paper
+  
+  Skewness <- c(0, 0, 0.042, 0.087, 0.065, -0.268, -0.234, -0.164, 0.075, 0.157, 0.245, 0.289, 0.168, 0.231, 0.547)
+  OverSkew <- 0.321
+  
+  ## test output from MackChainLadder
+  checkEquals(q$ByOrigin[,2], Skewness,tol=0.0015, checkNames = FALSE)
+  checkEquals(q$Totals$Totals[2], OverSkew,tol=0.0015, checkNames = FALSE)
+}
+
+test.EverestLiabNP <- function() {
+  ## by Eric Dal Moro
+  ## Check the additional Skewness elements addedto MachChainLadder function on the Mack 1993 triangles
+  ## Results are in the paper by Eric Dal Moro:
+  ## "An approximation of the non-life reserve risk distribution using the Cornish-Fisher expansion"
+  ## available at SSRN: https://ssrn.com/abstract=2965384
+  Test <- MackChainLadder(EverestLiabNP, est.sigma="Mack")
+  q<-quantile(Test,0.65)
+  ## Table 1 in the above paper
+  
+  Skewness <- c(0, 0, -0.024, -0.016, -0.008, 0.100, 0.399, 0.241, 0.229, 0.129, 0.034, 0.224, 0.340, 0.017, 0.485)
+  OverSkew <- 0.318
+
+  ## test output from MackChainLadder
+  checkEquals(q$ByOrigin[,2], Skewness,tol=0.0015, checkNames = FALSE)
+  checkEquals(q$Totals$Totals[2], OverSkew,tol=0.0015, checkNames = FALSE)
+}

@@ -827,13 +827,14 @@ quantile.MackChainLadder <- function(x, probs=c(0.75, 0.95), na.rm = FALSE,
   CF <- quantile + 1/6*(quantile^2-1) * Skewn$OverSkew/x[["Total.Mack.S.E"]]^3
   TotQuantile <- (1 + CF*x[["Total.Mack.S.E"]]/sum(IBNR))*sum(IBNR)
   
-  
+
   if(length(probs)>1){
-    ByOrigin <- as.data.frame(QuantilePY)
+    ByOrigin <- data.frame(QuantilePY,Skewn$Skewnes)
   }else{
-    ByOrigin <- as.data.frame(t(QuantilePY))
+    ByOrigin <- data.frame(QuantilePY,Skewn$Skewnes)
   }
   names(ByOrigin) <- paste("IBNR ", probs*100, "%", sep="")
+  names(ByOrigin)[ncol(ByOrigin)]<-paste("Skewness")
   
   origin <- dimnames(x$Triangle)[[1]]
   
@@ -841,10 +842,14 @@ quantile.MackChainLadder <- function(x, probs=c(0.75, 0.95), na.rm = FALSE,
     rownames(ByOrigin) <- origin
   }
   
-  Totals <- as.data.frame(TotQuantile)
+  TotSkew<-Skewn$OverSkew/x[["Total.Mack.S.E"]]^3
+  
+  Totals <- data.frame(c(TotQuantile, TotSkew))
   
   colnames(Totals)=c("Totals")
-  rownames(Totals) <- paste("IBNR ", probs*100, "%:", sep="")
+  rownames(Totals)[1:(nrow(Totals)-1)] <- paste("IBNR ", probs*100, "%:", sep="")
+  rownames(Totals)[nrow(Totals)]<-paste("Skewness ")
+  
   
   output <- list(ByOrigin=ByOrigin, Totals=Totals)
   return(output)
@@ -881,13 +886,14 @@ Asymetrie<- function(x) {
   f.se <- x$f.se
   sigma <- x$sigma
   
-  
+  #Calculation of the difference between individual chain-ladder coefficients and the chain-ladder coef 
   CLRatio <- function(i, Triangle, f){
     y=Triangle[,i+1]/Triangle[,i] - f[i]
   } 
   
   myModel <- sapply(c(1:(n-1)), CLRatio, Triangle, f)
-  
+
+  #intermediary sums calculation as in the formula of skewness in https://ssrn.com/abstract=2344297  
   Interm1<-function(i, yData){
     Interm1 <- sum(yData[c(1:(n-i)),i]^1.5)
   }
@@ -896,7 +902,7 @@ Asymetrie<- function(x) {
     Interm2 <- sum(yData[c(1:(n-i)),i])
   }
   
-  #Calculation of Sk3k
+  #Calculation of Sk3k (voir article SSRN above of Dal Moro for formula)
   
   Skew<- function(i, yModel, yData, Interme1, Interme2){
     #    yModel <- yModel[!is.na(yModel)]
@@ -943,7 +949,7 @@ Asymetrie<- function(x) {
     }
   }
   
-  #Calculation of Mack correlation between accident years
+  #Calculation of Mack correlation between accident years (Mack article 1993)
   for (k in c(1:(n-1))) {
     Inter[n-k]<-Sigma2[k]/f[k]^2/Interme2[k]
   }

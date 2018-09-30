@@ -8,28 +8,26 @@
 }
 \usage{
 
-\method{quantile}{MackChainLadder}(x, probs=c(0.75, 0.95), na.rm = FALSE,
-              names = TRUE, type = 7,\dots)
+\method{quantile}{MackChainLadder}(x, probs=c(0.75, 0.95))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{object of class \code{"MackChainLadder"}}
   \item{probs}{numeric vector of probabilities with values in [0,1],
     see \code{\link{quantile}} for more help}
-  \item{na.rm}{not used}
-  \item{names}{not used}
-  \item{type}{not used}         
-  \item{\dots}{not used}
+  
 }
 \details{
-Reserves at the desired quantile using the Cornish-Fisher expansion.
+Reserves at the desired quantile using the Cornish-Fisher expansion. 
+The Cornish-Fisher expansion relies on the first three moments of the reserve risk distribution: The Best estimate resulting from the Chain-Ladder projection, the Mack standard deviation and the skewness of the distribution (for skewness estimation, see references below).
+The quantile estimation requires only that the standard Mack assumptions are met.
 For details of the underlying calculations, see references below.
 }
 \value{
 \code{quantile.MackChainLadder} gives a list with two elements back:
-  \item{ByOrigin}{data frame with summary/mean/quantile statistics by
+  \item{ByOrigin}{data frame with summary/mean/quantile/skewness statistics by
     origin period}
-  \item{Totals}{data frame with total summary/mean/quantile statistics
+  \item{Totals}{data frame with total summary/mean/quantile/skewness statistics
     for all origin period}
 }
 
@@ -44,8 +42,28 @@ For details of the underlying calculations, see references below.
 \author{Eric Dal Moro}
 \seealso{ See also \code{\link{MackChainLadder}} }
 \examples{
- R <- MackChainLadder(RAA, est.sigma = "Mack")
+ R <- MackChainLadder(EverestLiabProp, est.sigma = "Mack")
  quantile(R, probs=c(0.5, 0.75, 0.9))
+ 
+ Skewness is 0.321 (see reference above)
+ 
+ 
+ R <- MackChainLadder(EverestLiabNP, est.sigma = "Mack")
+ quantile(R, probs=c(0.5, 0.75, 0.9))
+ 
+ Skewness is 0.318 (see reference above)
+
+
+ R <- MackChainLadder(SCORMotorNP, est.sigma = "Mack")
+ quantile(R, probs=c(0.5, 0.75, 0.9))
+ 
+ Skewness is 0.333 (see reference above)
+ 
+ 
+  R <- MackChainLadder(SCORLiabProp, est.sigma = "Mack")
+ quantile(R, probs=c(0.5, 0.75, 0.9))
+ 
+ Skewness is 0.534 (see reference above)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
